@@ -21,13 +21,12 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
+          python-version: "3.12"
 
       - name: Run Python tests
-        run: python -m unittest discover -p "test_*.py"
+        run: python -m unittest discover -p "test_*.py" -v
 
-      - name: Generate and send market report
+      - name: Test market data without Slack
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-        run: python market_report.py
-
+          DRY_RUN: "1"
+        run: python -u market_report.py
