@@ -1,1 +1,33 @@
 
+name: Daily Indian Market Report
+
+on:
+  workflow_dispatch:
+  repository_dispatch:
+    types: [daily-market-report]
+
+permissions:
+  contents: read
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Run Python tests
+        run: python -m unittest discover -p "test_*.py"
+
+      - name: Generate and send market report
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: python market_report.py
+
